@@ -1,13 +1,18 @@
 const Sessions = require("../models/sessions");
 
-export default async function (req, res, next) {
-	Sessions.find(req.db, req.cookies.sessionId, req.ip).then((value) => {
-		if (value === 1) {
-			res.end("true");
-		} else {
+export default function (req, res, next) {
+	console.log(req.cookies);
+	if (req.cookies !== undefined && req.cookies.sessionId !== undefined) {
+		Sessions.isLinked(req.db, req.cookies.sessionId, req.ip).then((value) => {
+			if (value) {
+				res.end("true");
+			} else {
+				res.end("false");
+			}
+		}).catch((error) => {
 			res.end("false");
-		}
-	}).catch((error) => {
+		});
+	} else {
 		res.end("false");
-	});
+	}
 }

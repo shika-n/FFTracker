@@ -62,6 +62,8 @@
 
 <script>
 export default {
+  layout: "dashboard",
+  middleware: ["authentication"],
   data() {
     return {
       imageDialog: false,

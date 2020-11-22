@@ -84,6 +84,7 @@ export default {
   serverMiddleware: [
     { path: '/api', handler: '~/api/base_api.js' },
     { path: '/api/test', handler: '~/api/test/test.js' },
+    { path: '/api/dump', handler: '~/api/dump.js' },
 
     { path: '/api/twitter/auth', handler: '~/api/twitter/auth.js' },
     { path: '/api/twitter/callback', handler: '~/api/twitter/callback.js' },

@@ -15,7 +15,7 @@ export default async function (req, res, next) {
 						await Sessions.insertAccessToken(req.db, req.newSessionId, accessToken, accessSecret);
 						
 						res.statusCode = 302;
-						res.setHeader("Location", `/`);
+						res.setHeader("Location", `/dashboard`);
 						res.setHeader("Cache-Control", "no-cache, no-store");
 						res.end();
 					} else {

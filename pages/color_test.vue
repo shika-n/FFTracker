@@ -21,3 +21,9 @@
     a<br />
   </v-container>
 </template>
+
+<script>
+export default {
+  layout: "dashboard",
+};
+</script>

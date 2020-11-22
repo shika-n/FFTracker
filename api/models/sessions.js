@@ -7,7 +7,6 @@ const ALWAYS_ALLOW_PATHS = [
 	"/session/get_status",
 ]
 const GUEST_ONLY_PATHS = [
-	"/",
 	"/twitter/auth",
 	"/twitter/callback",
 ]
@@ -49,6 +48,12 @@ class Sessions {
 			});
 			return null;
 		}
+	}
+
+	static async isLinked(db, sessionId, ip) {
+		const result = await this.find(db, sessionId, ip);
+
+		return result !== null && result.accessToken !== undefined;
 	}
 	
 	static async insertNew(db, sessionId, ip) {
@@ -122,7 +127,6 @@ class Sessions {
 		let isGuest = true;
 		if (session !== null) {
 			if (req.body === undefined || req.body.dontRenew === undefined || req.body.dontRenew !== "true") {
-				console.log("renewed");
 				await this.renewToken(req.db, session, newSessionId);
 				this.setCookie(res, newSessionId);
 			}

@@ -1,36 +1,42 @@
 <template>
   <v-app>
     <v-app-bar :clipped-left="true" fixed app>
-      <v-app-bar-nav-icon @click.stop="drawer = !drawer" />
-      <v-btn
-        v-if="!isSmallDevice()"
-        icon
-        @click.stop="drawerShrinked = !drawerShrinked"
-      >
-        <v-icon v-if="drawer">
-          mdi-{{ `chevron-${drawerShrinked ? "right" : "left"}` }}
-        </v-icon>
-      </v-btn>
       <v-toolbar-title>
         <strong class="primary--text">
           Twifer
         </strong>
       </v-toolbar-title>
       <v-spacer></v-spacer>
-      <v-switch
-        v-model="$vuetify.theme.dark"
-        :label="`Dark Mode`"
-        :color="`accent`"
-      ></v-switch>
+      <v-btn icon class="mx-2">
+        <v-avatar size="48" :color="`secondary`">
+          <span class="white--text font-weight-black headline">US</span>
+        </v-avatar>
+      </v-btn>
     </v-app-bar>
+    <v-bottom-navigation :v-if="isSmallDevice()" fixed grow app>
+      <v-btn v-for="item in drawerItems" :key="item.text" :to="item.to">
+        <span>{{ item.text }}</span>
+        <v-icon>{{ item.icon }}</v-icon>
+      </v-btn>
+    </v-bottom-navigation>
     <v-navigation-drawer
-      v-model="drawer"
+      :v-if="!isSmallDevice()"
       :mini-variant="drawerShrinked && !isSmallDevice()"
       :clipped="true"
       fixed
       app
     >
       <v-list>
+        <v-list-item @click.stop="drawerShrinked = !drawerShrinked">
+          <v-list-item-action>
+            <v-icon>
+              mdi-{{ `chevron-${drawerShrinked ? "right" : "left"}` }}
+            </v-icon>
+          </v-list-item-action>
+          <v-list-item-content>
+            Collapse
+          </v-list-item-content>
+        </v-list-item>
         <v-list-item
           v-for="item in drawerItems"
           :key="item.text"
@@ -48,12 +54,6 @@
     </v-navigation-drawer>
     <v-main>
       <v-container>
-        <v-btn v-if="loggedIn">
-          {{ loggedIn }}
-        </v-btn>
-        <p>
-          {{ testData }}
-        </p>
         <nuxt />
       </v-container>
     </v-main>
@@ -69,15 +69,13 @@ html {
 <script>
 export default {
   data() {
-    this.isLoggedIn();
     return {
-      drawer: false,
       drawerShrinked: true,
       drawerItems: [
         {
           icon: "mdi-home",
           text: "Home",
-          to: "/",
+          to: "/dashboard",
         },
         {
           icon: "mdi-heart",
@@ -100,8 +98,6 @@ export default {
           to: "/color_test",
         },
       ],
-      loggedIn: false,
-      testData: "data",
     };
   },
   methods: {
@@ -111,12 +107,6 @@ export default {
         this.$vuetify.breakpoint.sm ||
         this.$vuetify.breakpoint.xs
       );
-    },
-    async isLoggedIn() {
-      const response = await this.$axios.$post("api/session/get_status", {
-        dontRenew: "true",
-      });
-      this.loggedIn = response.status;
     },
   },
 };

@@ -11,5 +11,6 @@
 <script>
 export default {
   layout: "dashboard",
+  middleware: ["authentication"],
 };
 </script>
