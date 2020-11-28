@@ -11,6 +11,8 @@ const GUEST_ONLY_PATHS = [
 	"/twitter/callback",
 ]
 
+const DEFAULT_ORIGIN = "http://localhost:3000";
+
 class Sessions {
 	static collection(db) {
 		return db.collection("sessions");
@@ -128,7 +130,7 @@ class Sessions {
 		if (session !== null) {
 			if (req.body === undefined || req.body.dontRenew === undefined || req.body.dontRenew !== "true") {
 				await this.renewToken(req.db, session, newSessionId);
-				this.setCookie(res, newSessionId);
+				this.setCookie(req, res, newSessionId);
 			}
 
 			if (session.accessToken !== undefined && session.accessSecret !== undefined) {
@@ -136,7 +138,7 @@ class Sessions {
 			}
 		} else {
 			await this.insertNew(req.db, newSessionId, req.ip);
-			this.setCookie(res, newSessionId);
+			this.setCookie(req, res, newSessionId);
 		}
 
 		req.newSessionId = newSessionId;
@@ -163,14 +165,18 @@ class Sessions {
 		return 1;
 	}
 
-	static setCookie(res, newSessionId) {
+	static setCookie(req, res, newSessionId) {
 		res.statusCode = 200;
 		res.setHeader("Set-Cookie", `sessionId=${newSessionId}; Path=/; HttpOnly`);
+		res.setHeader("Access-Control-Allow-Origin", DEFAULT_ORIGIN);
+		res.setHeader("Access-Control-Allow-Credentials", "true");
 	}
 
-	static deleteCookie(res) {
+	static deleteCookie(req, res) {
 		res.statusCode = 401;
 		res.setHeader("Set-Cookie", "sessionId=; Path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT");
+		res.setHeader("Access-Control-Allow-Origin", DEFAULT_ORIGIN);
+		res.setHeader("Access-Control-Allow-Credentials", "true");
 	}
 }
 

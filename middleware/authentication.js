@@ -3,7 +3,7 @@ export default async function (context) {
     const response = await context.app.$axios.post(
       "api/session/get_status",
       {
-        dontRenew: "true",
+        dontRenew: "false",
       },
       {
         withCredentials: true,

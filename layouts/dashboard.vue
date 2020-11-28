@@ -13,14 +13,14 @@
         </v-avatar>
       </v-btn>
     </v-app-bar>
-    <v-bottom-navigation :v-if="isSmallDevice()" fixed grow app>
+    <v-bottom-navigation v-if="isSmallDevice()" fixed grow app>
       <v-btn v-for="item in drawerItems" :key="item.text" :to="item.to">
         <span>{{ item.text }}</span>
         <v-icon>{{ item.icon }}</v-icon>
       </v-btn>
     </v-bottom-navigation>
     <v-navigation-drawer
-      :v-if="!isSmallDevice()"
+      v-if="!isSmallDevice()"
       :mini-variant="drawerShrinked && !isSmallDevice()"
       :clipped="true"
       fixed
@@ -91,11 +91,6 @@ export default {
           icon: "mdi-account-arrow-left",
           text: "Followers",
           to: "/followers",
-        },
-        {
-          icon: "mdi-code-tags",
-          text: "Dev",
-          to: "/color_test",
         },
       ],
     };
